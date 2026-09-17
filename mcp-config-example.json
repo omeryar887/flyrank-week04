@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "flyrank-week7": {
+      "command": "C:\\Path\\To\\Python\\python.exe",
+      "args": ["C:\\Path\\To\\week-07-agent-build\\mcp-server\\server.py"],
+      "env": {
+        "FLRANK_WORKSPACE": "C:\\Path\\To\\week-07-agent-build"
+      }
+    }
+  }
+}

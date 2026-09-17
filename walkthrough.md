@@ -1,53 +1,33 @@
-# Week 6 Walkthrough
+# FL-07 Walkthrough
 
-## Part A — Concept work
+## 1. Start the server
 
-1. Review `workflow-vs-agent.md`.
-2. Review `mcp-primitives.md`.
-3. Read `explainer.md` and compare it with the required 600–900 word target.
-4. Review `agent-upgrade.md`.
+Create the virtual environment, install `mcp`, and confirm the server starts.
 
-## Part B — Run the MCP server
+## 2. Connect it to Claude
 
-The included server is a local, read-only Python MCP server.
+Add the MCP server to the client configuration using the actual absolute paths on the machine. Restart the client and verify the three tools appear.
 
-From the `mcp-server` folder:
+## 3. Load the agent instructions
 
-```powershell
-py -m pip install -r requirements.txt
-py server.py
-```
+Use `agent/CLAUDE_PROJECT_INSTRUCTIONS.md` as the project's instructions or equivalent system-level instructions in the selected Claude environment.
 
-For a stdio MCP server, the client normally launches the server process itself, so you should not need to keep a separate terminal running when Claude is configured to start it.
+## 4. Run the new input
 
-## Part C — Connect it to an MCP client
+Use `agent/run-prompt.md` exactly as the single request for the checkpoint recording. Do not edit intermediate results.
 
-Use an MCP client that supports local stdio servers, such as a current Claude desktop client. Follow the client's current MCP/server configuration flow and point it at the absolute path to `server.py` using the Python executable on your machine.
+## 5. Observe the loop
 
-A generic configuration shape is:
+The expected behavior is:
 
-```json
-{
-  "mcpServers": {
-    "flyrank-week6-files": {
-      "command": "C:\\Path\\To\\Python\\python.exe",
-      "args": ["C:\\Path\\To\\week-06-agent-mcp-basics\\mcp-server\\server.py"]
-    }
-  }
-}
-```
+1. Agent understands the request.
+2. Agent discovers the workspace.
+3. Agent searches for relevant evidence.
+4. Agent reads the selected source.
+5. Agent writes study notes.
+6. Agent checks the result against retrieved evidence.
+7. Agent reports sources, gaps, and human review.
 
-Do not copy the example paths literally. Replace them with real absolute paths on your computer.
+## 6. Capture evidence
 
-## Part D — Run three tasks
-
-Use the three task files in `tasks/`. For each task, capture a screenshot where the MCP tool call and the returned result are visible.
-
-1. List files in the workflow package.
-2. Read the Claude Project configuration.
-3. Search the workflow failure-points document for human-review or failure-related text.
-
-These tasks demonstrate that the client is actually using a connected tool rather than answering from the chat context alone.
-
-## Evidence rule
-Do not claim the connector works until the tool calls have actually appeared in the MCP client. Replace the evidence placeholders with screenshots and short notes after the real runs.
+Record approximately two minutes from the initial request through the final result. Keep the recording raw and unedited. The recording should show tool calls, not just the final answer.

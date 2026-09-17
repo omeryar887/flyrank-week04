@@ -1,111 +1,53 @@
-from __future__ import annotations
-
 from pathlib import Path
-from typing import List
-
+import os
 from mcp.server.fastmcp import FastMCP
 
+mcp = FastMCP("flyrank-workspace")
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-TEXT_EXTENSIONS = {".md", ".txt", ".json", ".py", ".html", ".css", ".js", ".yaml", ".yml"}
-
-mcp = FastMCP("flyrank-week6-files")
+ROOT = Path(os.environ.get("FLRANK_WORKSPACE", Path(__file__).resolve().parents[1])).resolve()
 
 
 def safe_path(relative_path: str) -> Path:
-    """Resolve a project-relative path and block traversal outside the project."""
-    candidate = (PROJECT_ROOT / relative_path).resolve()
-    if candidate != PROJECT_ROOT and PROJECT_ROOT not in candidate.parents:
-        raise ValueError("Path is outside the Week 6 project directory")
-    return candidate
-
-
-def text_files() -> List[Path]:
-    return [
-        path
-        for path in PROJECT_ROOT.rglob("*")
-        if path.is_file() and path.suffix.lower() in TEXT_EXTENSIONS
-    ]
+    target = (ROOT / relative_path).resolve()
+    if target != ROOT and ROOT not in target.parents:
+        raise ValueError("Path is outside the approved workspace")
+    if target.is_dir():
+        raise ValueError("Expected a file, not a directory")
+    return target
 
 
 @mcp.tool()
-def list_files(subdirectory: str = "") -> str:
-    """List project files below an optional project-relative directory."""
-    base = safe_path(subdirectory)
-    if not base.exists() or not base.is_dir():
-        return f"Directory not found: {subdirectory or '.'}"
-
-    files = sorted(
-        str(path.relative_to(PROJECT_ROOT))
-        for path in base.rglob("*")
-        if path.is_file()
-    )
-    return "\n".join(files) if files else "No files found."
+def list_project_files() -> str:
+    """List files in the approved FlyRank Week 7 workspace."""
+    files = [p.relative_to(ROOT).as_posix() for p in ROOT.rglob("*") if p.is_file()]
+    return "\n".join(sorted(files)) or "No files found."
 
 
 @mcp.tool()
-def read_file(relative_path: str, max_chars: int = 12000) -> str:
-    """Read a UTF-8 text file from the Week 6 project."""
-    path = safe_path(relative_path)
-    if not path.is_file():
-        return f"File not found: {relative_path}"
-    if path.suffix.lower() not in TEXT_EXTENSIONS:
-        return "Only approved text file types can be read."
-
-    content = path.read_text(encoding="utf-8")
-    if len(content) > max_chars:
-        content = content[:max_chars] + "\n...[truncated]"
-    return content
+def read_project_file(path: str) -> str:
+    """Read one UTF-8 text file from the approved workspace."""
+    target = safe_path(path)
+    if not target.exists():
+        raise FileNotFoundError(path)
+    return target.read_text(encoding="utf-8")
 
 
 @mcp.tool()
-def search_files(query: str, subdirectory: str = "") -> str:
-    """Search approved text files for a case-insensitive phrase."""
-    if not query.strip():
-        return "Search query cannot be empty."
-
-    base = safe_path(subdirectory)
-    if not base.exists() or not base.is_dir():
-        return f"Directory not found: {subdirectory or '.'}"
-
-    matches = []
-    needle = query.lower()
-    for path in sorted(base.rglob("*")):
-        if not path.is_file() or path.suffix.lower() not in TEXT_EXTENSIONS:
+def search_project(query: str) -> str:
+    """Search UTF-8 text files in the approved workspace for a phrase."""
+    results = []
+    for path in ROOT.rglob("*"):
+        if not path.is_file():
             continue
         try:
-            lines = path.read_text(encoding="utf-8").splitlines()
-        except UnicodeDecodeError:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
             continue
-        for number, line in enumerate(lines, start=1):
-            if needle in line.lower():
-                matches.append(f"{path.relative_to(PROJECT_ROOT)}:{number}: {line.strip()}")
-
-    return "\n".join(matches) if matches else "No matches found."
-
-
-@mcp.resource("workflow://fl-04")
-def fl04_workflow() -> str:
-    """Expose the FL-04 workflow as read-only context."""
-    return """FL-04 Source-Grounded Technical Study Notes workflow:
-1. Gather source-supported facts.
-2. Synthesize evidence into a logical structure.
-3. Draft beginner-friendly study notes.
-4. Review support, gaps, clarity, and formatting.
-5. Human checks important claims before use.
-"""
-
-
-@mcp.prompt()
-def review_workflow_file(file_path: str) -> str:
-    """Create a reusable prompt for reviewing a workflow evidence file."""
-    return (
-        "Review the workflow evidence file at "
-        f"{file_path}. Check whether the document clearly identifies the workflow "
-        "stage, handoff, evidence, failure point, and required human review. "
-        "Do not invent missing evidence."
-    )
+        if query.lower() in text.lower():
+            lines = [f"{i}: {line.strip()}" for i, line in enumerate(text.splitlines(), 1) if query.lower() in line.lower()]
+            results.append(f"FILE: {path.relative_to(ROOT).as_posix()}\n" + "\n".join(lines[:20]))
+    return "\n\n".join(results) or f"No matches for: {query}"
 
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(transport="stdio")
