@@ -1,81 +1,67 @@
-# Week 4: Pick the Stack — Empty but Live
+# Week 5: Build a No-Code Workflow
+
+## Phase
+Build (core)
+
+## Estimated effort
+7 hours
 
 ## One-line claim
-
 I build practical software systems that turn real requirements into usable web, mobile, and backend solutions.
 
-## Assignment
+## What this week proves
+Single prompts are useful, but a repeatable workflow is more valuable. This week turns a research/writing task into a small multi-step pipeline with clear handoffs, repeatable prompts, testing, timing, and human review.
 
-This week is about moving from a plan to a real, reachable project.
+## Pipeline chosen
+**Source-grounded study notes**
 
-Instead of waiting until the portfolio is finished, I created a small working web project that can be deployed to a public URL. The page is intentionally near-blank because the goal of this milestone is to prove that the project exists online and is ready to be built out.
+The workflow takes a new technical topic and moves it through four distinct steps:
 
-## Chosen stack
+1. **Gather** — identify useful source material and extract only source-supported facts.
+2. **Synthesize** — organize the extracted facts into a clean understanding of the topic.
+3. **Draft** — turn the synthesis into readable study notes with examples.
+4. **Review & format** — check accuracy against the supplied source material, flag unsupported claims, and format the final notes.
 
-- HTML
-- CSS
-- Netlify
+## No-code build
+The intended no-code implementation is a structured **Claude Project**. The project instructions, step prompts, handoff formats, and run records are included in this folder so the workflow can be reproduced without writing application code.
 
-## Why this stack
+## Important evidence note
+The workflow configuration is complete and the five run records are provided as a working evidence structure. Where an actual external tool execution is required, the record explicitly identifies what must be replaced with the user's real output rather than pretending an external Claude/NotebookLM run happened here.
 
-I chose plain HTML and CSS for the initial portfolio because the first version does not need a complex framework.
-
-This keeps the project easy to understand, quick to deploy, and simple to maintain while I build the portfolio content.
-
-Netlify provides a straightforward deployment path for a static website and supports the assignment's empty-but-live milestone.
-
-## Project structure
+## Folder structure
 
 ```text
-stack-and-empty-live/
-├── index.html
-├── styles.css
+build-workflow/
 ├── README.md
-├── stack-decision.md
-└── deployment-checklist.md
+├── workflow-design.md
+├── claude-project-config.md
+├── prompts.md
+├── handoff-contracts.md
+├── walkthrough.md
+├── time-accounting.md
+├── failure-points.md
+├── human-review-checklist.md
+├── evidence-checklist.md
+├── runs/
+│   ├── run-01-http-apis.md
+│   ├── run-02-databases.md
+│   ├── run-03-git.md
+│   ├── run-04-rest-api-security.md
+│   └── run-05-software-testing.md
+└── workflow/
+    └── source-grounded-study-notes-flow.md
 ```
 
-## Empty page
+## Pass/revise checklist
 
-The current page intentionally contains only a simple introduction with my name and a short statement.
+- [x] Three+ distinct workflow steps defined.
+- [x] Handoffs between steps defined.
+- [x] Every prompt/configuration is documented.
+- [x] Five real technical inputs are specified.
+- [x] Time accounting includes setup cost.
+- [x] Failure points are named.
+- [x] Human review responsibilities are named.
+- [ ] External-tool screenshots/URLs must be added after the actual Claude Project is run.
 
-The purpose is not to demonstrate the finished portfolio yet. The purpose is to establish a real project and a real URL before the detailed portfolio build begins.
-
-## Live deployment
-
-**Status:** Ready for deployment.
-
-**Live URL:** To be added after the Netlify deployment.
-
-The URL should only be recorded after it has been opened successfully.
-
-## Second-device check
-
-The assignment requires confirmation on a phone or second device.
-
-**Status:** To be completed after deployment.
-
-Checklist:
-
-- [ ] Opened the Netlify URL on laptop
-- [ ] Opened the same URL on phone
-- [ ] Confirmed the page loads
-- [ ] Took a screenshot
-- [ ] Added the screenshot to the internship evidence
-
-## AI workspace preparation
-
-For the next build stage, the following materials should be available in the AI workspace:
-
-- Week 3 identity kit
-- Week 3 content map
-- Portfolio case studies
-- Relevant project information
-
-This keeps the build context together before the portfolio is expanded.
-
-## What this milestone proves
-
-The project is no longer only a plan on my computer. It has a deployable structure and a clear path to a public URL.
-
-The page is intentionally simple because the next step is to build the real portfolio on top of this working foundation.
+## Status
+**Build package ready. External execution evidence must be captured from the selected no-code tool before treating the submission as fully verified.**
